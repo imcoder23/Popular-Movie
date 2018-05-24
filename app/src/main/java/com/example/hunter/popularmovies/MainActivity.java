@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
        Log.d("parseSort",sort);
 
        String Url = getUrl(sort);
-//        String Url ="https://api.themoviedb.org/3/movie/popular?api_key=2d0e8d737c7a9f7ec6d58839b3f1b8a4";
+//        String Url ="https://api.themoviedb.org/3/movie/popular?api_key=";
 
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, Url, null,
                 new Response.Listener<JSONObject>() {
