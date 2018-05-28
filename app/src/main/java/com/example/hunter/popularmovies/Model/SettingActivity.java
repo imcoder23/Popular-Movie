@@ -1,10 +1,7 @@
 package com.example.hunter.popularmovies.Model;
 
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;

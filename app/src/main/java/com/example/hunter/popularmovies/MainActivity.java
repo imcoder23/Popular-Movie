@@ -6,12 +6,9 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,7 +30,6 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunter.popularmovies.Adapter.movieAdapter;
@@ -56,8 +52,7 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
     private RequestQueue mRequestQueue;
     private TextView errorView;
     private Button btn_reload;
-    private Menu msortmenu;
-    String defaultOrder = "popular";
+    // --Commented out by Inspection (5/28/2018 10:01 AM):private final String defaultOrder = "popular";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,22 +65,16 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
         moviesList = new ArrayList<>();
         errorView = findViewById(R.id.show_error);
         btn_reload = findViewById(R.id.btn_error);
-        msortmenu = findViewById(R.id.sort_menu);
-
-
         mRequestQueue = Volley.newRequestQueue(this);
 
         if(!check_ConnectionStatus()){
             showgagets();
             return;
         }
-
         checkSortOrder();
-//        parseJson(defaultOrder);
         }
 
-
-    @Override
+        @Override
     protected void onDestroy() {
         super.onDestroy();
         PreferenceManager.getDefaultSharedPreferences(this)
@@ -110,15 +99,15 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
 
                                 int Movie_Id = result.getInt("id");
                                 String MOVIE_TITLE = result.getString("title");
-                                Log.d("title",MOVIE_TITLE);
+//                                Log.d("title",MOVIE_TITLE);
                                 String MOVIE_POSTER = result.getString("poster_path");
-                                Log.d("Poster",MOVIE_POSTER);
+//                                Log.d("Poster",MOVIE_POSTER);
                                 String MOVIE_PLOT = result.getString("overview");
-                                Log.d("plot",MOVIE_PLOT);
+//                                Log.d("plot",MOVIE_PLOT);
                                 String MOVIE_RATING = result.getString("vote_average");
-                                Log.d("Rating",MOVIE_RATING);
+//                                Log.d("Rating",MOVIE_RATING);
                                 String MOVIE_RELEASE_DATE = result.getString("release_date");
-                                Log.d("release Date",MOVIE_RELEASE_DATE);
+//                                Log.d("release Date",MOVIE_RELEASE_DATE);
 
                                 moviesList.add(new Movie(Movie_Id,MOVIE_TITLE,MOVIE_POSTER,MOVIE_PLOT,MOVIE_RATING,MOVIE_RELEASE_DATE));
                             }
@@ -137,9 +126,6 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
             @Override
             public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
-                    Log.d("Network", String.valueOf(error));
-//                    String message = null;
-
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
                     Toast.makeText(getApplicationContext(), "Internet/Communication Error!", Toast.LENGTH_SHORT).show();
                     showgagets();
@@ -165,36 +151,32 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
     }
 
     private String getUrl(String sort) {
-        final String Api_key="put ur api key here";
-        final String movie_api ="api_key";
-        final String base_Url="https://api.themoviedb.org/3/movie/";
+        final String Api_key = "";
+        final String movie_api = "api_key";
+        final String base_Url = "https://api.themoviedb.org/3/movie/";
         URL url = null;
-        Uri uri = Uri.parse(base_Url)
-                .buildUpon()
-                .appendPath(sort)
-                .appendQueryParameter(movie_api,Api_key)
-                .build();
-        try {
-            url = new URL(uri.toString());
-            Log.d("Urlmade", String.valueOf(url));
-
+        if (Api_key.isEmpty()) {
+            Toast.makeText(this, "Please Input your API KEY First", Toast.LENGTH_LONG).show();
+        } else {
+            Uri uri = Uri.parse(base_Url)
+                    .buildUpon()
+                    .appendPath(sort)
+                    .appendQueryParameter(movie_api, Api_key)
+                    .build();
+            try {
+                url = new URL(uri.toString());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
-        catch (MalformedURLException e)
-        {
-            e.printStackTrace();
-        }
-        return String.valueOf(url);
+            return String.valueOf(url);
 
     }
-
-
 
     private void showgagets() {
         errorView.setVisibility(View.VISIBLE);
         btn_reload.setVisibility(View.VISIBLE);
     }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -210,15 +192,6 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
             startActivity(intent);
             return true;
         }
-//            if(id == R.id.popular){
-//                setTitle("Popular Movies");
-//                parseJson("popular");
-//            }
-//            if(id == R.id.top_rate){
-//                setTitle("Top Rated Movies");
-//                parseJson("top_rated");
-
-//            }
         return super.onOptionsItemSelected(item);
     }
 
@@ -233,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
 
         Intent detailIntent = new Intent (this,DetailActivity.class);
         Movie clickedItem = moviesList.get(position);
-
         detailIntent.putExtra("title",clickedItem.getMovie_title());
         detailIntent.putExtra("poster",clickedItem.getMovie_poster());
         detailIntent.putExtra("plot",clickedItem.getMovie_plot());
@@ -244,13 +216,11 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
 
 
 
-    public boolean check_ConnectionStatus(){
+    private boolean check_ConnectionStatus(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if( null != cm) {
             NetworkInfo info = cm.getActiveNetworkInfo();
-            if(info != null && info.isConnectedOrConnecting()){
-                return true;
-            }
+            return info != null && info.isConnectedOrConnecting();
         }
         return false;
     }
@@ -261,53 +231,32 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
                 btn_reload.setVisibility(View.INVISIBLE);
                 mrecyclerView.setVisibility(View.VISIBLE);
                 mRequestQueue = Volley.newRequestQueue(this);
-                parseJson(defaultOrder);
+                checkSortOrder();
             }else{
                 Toast.makeText(this,"Check Internet/Network",Toast.LENGTH_LONG).show();
             }
-
-
-
-    }
+}
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d("Preference", "Preferences updated");
-        //           Log.i("orrderkey",key);
-//        if(key.equals(this.getString(R.string.most_popular))){
-//            parseJson("popular");
-//        }else{
-//            parseJson("top_rated");
-//        }
-        checkSortOrder();
-
+        String sortOrder = sharedPreferences.getString(this.getString(R.string.sort_order_key), this.getString(R.string.most_popular));
+        if(sortOrder.equals(this.getString(R.string.most_popular))){
+            super.recreate();
+            parseJson("popular");
+        }else{
+            super.recreate();
+            parseJson("top_rated");
+        }
     }
 
     private void checkSortOrder() {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             String sortOrder = sharedPreferences.getString(this.getString(R.string.sort_order_key), this.getString(R.string.most_popular));
-
-//            Log.d("orrder",sortOrder);
             if(sortOrder.equals(this.getString(R.string.most_popular))){
                 parseJson("popular");
             }else{
                 parseJson("top_rated");
-
             }
-
-//        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
-
-
-
-   @Override
-    public void Resume() {
-        super.onResume();
-//        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-//        if (moviesList.isEmpty()) {
-//            checkSortOrder();
-//        } else {
-//            checkSortOrder();
-//        }
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 }

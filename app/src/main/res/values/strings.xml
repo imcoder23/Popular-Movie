@@ -1,4 +1,13 @@
 <resources>
+    <string name="network">Check Network/Internet Connection!</string>
+    <string name="reload">Reload..</string>
+    <string name="settings">Settings</string>
+    <string name="imdb">IMDB:</string>
+    <string name="rating">Rating :</string>
+    <string name="moviename">MovieName</string>
+    <string name="year">Year :</string>
+    <string name="movie_description">Movie Description</string>
+    <string name="synopsis">Synopsis</string>
     <string name="app_name">Popular Movies</string>
     <string name="sort_order">Sort Order</string>
     <string name="most_popular">Popular</string>

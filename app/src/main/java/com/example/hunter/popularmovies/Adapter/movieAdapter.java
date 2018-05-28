@@ -3,11 +3,9 @@ package com.example.hunter.popularmovies.Adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,19 +13,18 @@ import com.example.hunter.popularmovies.Model.Movie;
 import com.example.hunter.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class movieAdapter extends RecyclerView.Adapter<movieAdapter.movieHolder> {
-    String Image_path = "http://image.tmdb.org/t/p/w185";
-    private Context mcontext;
-    private List<Movie> movielist;
+    private final String Image_path = "http://image.tmdb.org/t/p/w185";
+    private final Context mcontext;
+    private final List<Movie> movielist;
     private com.example.hunter.popularmovies.Adapter.movieAdapter.OnItemClickListener mListner;
 
     public interface OnItemClickListener{
         void onItemClick(int position);
 
-        void Resume();
+        // void Resume();
     }
 
     public void setOnItemClickListener(OnItemClickListener listner){
@@ -69,10 +66,10 @@ public class movieAdapter extends RecyclerView.Adapter<movieAdapter.movieHolder>
 
 
     public class movieHolder extends RecyclerView.ViewHolder{
-        public ImageView mimageView;
-        public TextView tv_ImdbRating;
+        final ImageView mimageView;
+        final TextView tv_ImdbRating;
 
-        public movieHolder(View itemView) {
+        movieHolder(View itemView) {
             super(itemView);
          mimageView = itemView.findViewById(R.id.imageView_movieposter);
          tv_ImdbRating = itemView.findViewById(R.id.textView_imdb);
