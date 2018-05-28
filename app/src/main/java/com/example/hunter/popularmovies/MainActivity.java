@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
     }
 
     private String getUrl(String sort) {
-        final String Api_key = "";
+        final String Api_key = ""; //PUT Your API KEY HERE
         final String movie_api = "api_key";
         final String base_Url = "https://api.themoviedb.org/3/movie/";
         URL url = null;
